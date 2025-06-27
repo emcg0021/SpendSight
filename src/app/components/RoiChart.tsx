@@ -16,15 +16,31 @@ import SubscribeButton from './SubscribeButton';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
+interface Campaign {
+  id: number;
+  name: string;
+  spend: number;
+  revenue: number;
+  roi: number;
+  date: string;
+}
+
+interface User {
+  id: string;
+  email: string;
+  is_active: boolean;
+}
+
 export default function RoiChart({
   campaigns,
   isPro,
   user,
 }: {
-  campaigns: any[];
+  campaigns: Campaign[];
   isPro: boolean;
-  user: any;
+  user: User;
 }) {
+  
   const sorted = [...campaigns].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const data = {

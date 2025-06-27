@@ -9,7 +9,12 @@ import SubscribeButton from '../components/SubscribeButton';
 
 export default function BillingPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  interface DBUser {
+  id: string;
+  email: string;
+  is_active: boolean;
+}
+const [user, setUser] = useState<DBUser | null>(null);
   const [loading, setLoading] = useState(true);
 
 useEffect(() => {
@@ -67,7 +72,7 @@ const { data: dbUser, error } = await supabase
         </div>
 
         {!user?.is_active ? (
-  <SubscribeButton user={user} />
+  user && <SubscribeButton user={user} />
 ) : (
   <p className="text-center text-green-600 font-medium">
     ✅ You are subscribed

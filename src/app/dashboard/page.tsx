@@ -12,10 +12,26 @@ import supabase from '../../lib/supabaseClient';
 import { exportCampaignsToCsv, importCampaignsFromCsv } from '../../lib/csvUtils';
 import { isPremium } from '../../lib/helpers';
 
+type User = {
+  id: string;
+  email: string;
+  is_active?: boolean;
+};
+
+type Campaign = {
+  id: number;
+  user_id: string;
+  name: string;
+  spend: number;
+  revenue: number;
+  roi: number;
+  date: string;
+};
+
 export default function Dashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [form, setForm] = useState({ name: '', spend: '', revenue: '', date: '' });
   const [editingCampaignId, setEditingCampaignId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({ name: '', spend: '', revenue: '', date: '' });
@@ -36,7 +52,7 @@ export default function Dashboard() {
         .eq('id', user.id)
         .single();
 
-      setUser({ ...user, is_active: userData?.is_active ?? false });
+      setUser({ id: user.id, email: user.email ?? '', is_active: userData?.is_active === undefined ? false : userData.is_active });
     };
 
     getUser();
@@ -56,7 +72,7 @@ export default function Dashboard() {
     if (!error && data) setCampaigns(data);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const name = form.name.trim();
@@ -77,6 +93,10 @@ export default function Dashboard() {
 
     const roi = spend !== 0 ? (revenue - spend) / spend : 0;
 
+    if (!user) {
+      toast.error('User not found.');
+      return;
+    }
     const { error } = await supabase.from('campaigns').insert([{
       user_id: user.id,
       name,
@@ -156,9 +176,9 @@ export default function Dashboard() {
 
         {!isPro && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 text-center text-sm text-gray-700">
-            <p className="mb-2">You're on the free plan.</p>
+            <p className="mb-2">You&rsquo;re on the free plan.</p>
             <p className="mb-4">Upgrade to unlock unlimited campaigns and pro features.</p>
-            <SubscribeButton user={user} />
+            {user && <SubscribeButton user={user} />}
           </div>
         )}
 
@@ -221,20 +241,29 @@ export default function Dashboard() {
           </form>
         ) : (
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 text-center text-sm text-gray-700">
-            <p className="mb-2">You've reached the free campaign limit of {maxFreeCampaigns}.</p>
+            <p className="mb-2">You&rsquo;ve reached the free campaign limit of {maxFreeCampaigns}.</p>
             <p className="mb-4">Upgrade to premium for unlimited campaigns.</p>
-            <SubscribeButton user={user} />
+            {user && <SubscribeButton user={user} />}
           </div>
         )}
 
-        <RoiChart campaigns={campaigns} isPro={isPro} user={user} />
+        {user && (
+          <RoiChart
+            campaigns={campaigns}
+            isPro={isPro}
+            user={{
+              ...user,
+              is_active: user.is_active === undefined ? false : user.is_active,
+            }}
+          />
+        )}
 
         <h2 className="text-xl font-semibold mb-4">Your Campaign History</h2>
 
         {isPro && (
           <div className="flex flex-col md:flex-row gap-4 justify-end mb-4">
             <button
-              onClick={() => exportCampaignsToCsv(campaigns, user.email)}
+              onClick={() => user && exportCampaignsToCsv(campaigns, user.email)}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
               data-tooltip-id="export-tip"
               data-tooltip-content="Download your campaign data as a CSV file"

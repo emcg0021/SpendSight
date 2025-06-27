@@ -4,7 +4,11 @@
 
 import { useState } from 'react';
 
-export default function SubscribeButton({ user }: { user: any }) {
+interface User {
+  id: string;
+  email: string;
+}
+export default function SubscribeButton({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
