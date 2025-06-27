@@ -1,3 +1,7 @@
-export function isPremium(user: any) {
-  return user?.is_active === true;
-}
+type User = {
+  is_active?: boolean;
+};
+
+export const isPremium = (user: User | null): boolean => {
+  return !!user?.is_active;
+};

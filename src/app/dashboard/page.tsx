@@ -59,8 +59,21 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (user?.id) fetchCampaigns(user.id);
-  }, [user]);
+  const getUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return router.push('/login');
+
+    const { data: userData } = await supabase
+      .from('users')
+      .select('is_active')
+      .eq('id', user.id)
+      .single();
+
+    setUser({ id: user.id, email: user.email ?? '', is_active: userData?.is_active ?? false });
+  };
+
+  getUser();
+}, [router]);
 
   const fetchCampaigns = async (userId: string) => {
     const { data, error } = await supabase
@@ -125,7 +138,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleEditClick = (campaign: any) => {
+  const handleEditClick = (campaign: Campaign) => {
     setEditingCampaignId(campaign.id);
     setEditForm({
       name: campaign.name,
@@ -135,7 +148,7 @@ export default function Dashboard() {
     });
   };
 
-  const handleUpdateCampaign = async (e: any) => {
+  const handleUpdateCampaign = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!editingCampaignId) return;
 

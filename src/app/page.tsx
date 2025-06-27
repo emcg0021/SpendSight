@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import Image from 'next/image';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import supabase from '../lib/supabaseClient';
 
@@ -61,11 +62,13 @@ export default function LandingPage() {
           </button>
         </div>
 
-        <img
-          src="/dashboard.png"
-          alt="Dashboard Screenshot"
-          className="w-full rounded-xl shadow-lg"
-        />
+        <Image
+           src="/dashboard.png"
+           alt="Dashboard Screenshot"
+           width={1200}
+           height={600}
+           className="w-full rounded-xl shadow-lg"
+         />
 
 <div className="mt-16 grid gap-8 sm:grid-cols-2 text-gray-800">
   <div>

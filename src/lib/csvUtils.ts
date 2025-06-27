@@ -2,7 +2,16 @@ import Papa from 'papaparse';
 import supabase from './supabaseClient';
 
 // Export campaign data to CSV and trigger download
-export const exportCampaignsToCsv = (campaigns: any[], userEmail: string) => {
+type CampaignCsv = {
+  name: string;
+  spend: number;
+  revenue: number;
+  roi: number;
+  date: string;
+};
+
+export const exportCampaignsToCsv = (campaigns: CampaignCsv[], userEmail: string) => {
+
   if (!campaigns.length) return;
 
   const headers = [
@@ -50,7 +59,7 @@ export const importCampaignsFromCsv = async (file: File, userId: string): Promis
       skipEmptyLines: true,
       complete: async (results) => {
         try {
-          const campaigns = (results.data as any[]).map((row) => {
+          const campaigns = (results.data as { [key: string]: string }[]).map((row) => {
             const spend = parseFloat(row.spend);
             const revenue = parseFloat(row.revenue);
 
