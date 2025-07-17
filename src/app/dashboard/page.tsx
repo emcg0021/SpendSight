@@ -42,24 +42,7 @@ export default function Dashboard() {
   const isDemoUser = user?.email === 'demo@fakeemail.com';
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return router.push('/login');
-
-      const { data: userData } = await supabase
-        .from('users')
-        .select('is_active')
-        .eq('id', user.id)
-        .single();
-
-      setUser({ id: user.id, email: user.email ?? '', is_active: userData?.is_active === undefined ? false : userData.is_active });
-    };
-
-    getUser();
-  }, []);
-
-  useEffect(() => {
-  const getUser = async () => {
+  const getUserAndCampaigns = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return router.push('/login');
 
@@ -69,10 +52,19 @@ export default function Dashboard() {
       .eq('id', user.id)
       .single();
 
-    setUser({ id: user.id, email: user.email ?? '', is_active: userData?.is_active ?? false });
+    const isActive = userData?.is_active ?? false;
+
+    const finalUser = {
+      id: user.id,
+      email: user.email ?? '',
+      is_active: isActive,
+    };
+
+    setUser(finalUser);
+    fetchCampaigns(finalUser.id);
   };
 
-  getUser();
+  getUserAndCampaigns();
 }, [router]);
 
   const fetchCampaigns = async (userId: string) => {
