@@ -12,18 +12,21 @@ export default function SignupPage() {
   const [error, setError] = useState('');
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
+  e.preventDefault();
+  setError('');
 
-    const { email, password } = form;
-    const { error } = await supabase.auth.signUp({ email, password });
+  const { email, password } = form;
+  const { error } = await supabase.auth.signUp({ email, password });
 
-    if (error) {
-      setError(error.message);
-    } else {
-      toast.success('Check your email to confirm your account.');
-    }
-  };
+  if (error) {
+    setError(error.message);
+  } else {
+    toast.success('Check your email to confirm your account.');
+    setTimeout(() => {
+      router.push('/login');
+    }, 3000); // Redirect to /login after 3 seconds
+  }
+};
 
   return (
     <>
