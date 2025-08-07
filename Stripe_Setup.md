@@ -50,6 +50,6 @@ Replace `your-production-domain.com` with your actual domain (e.g. `spendsightto
 
 ---
 
-## ✅ Done
+## Done
 
 SpendSight is now connected to your live Stripe account for secure subscription management.
