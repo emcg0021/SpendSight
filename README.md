@@ -38,7 +38,7 @@ SpendSight is a streamlined ad spend profit tracker built for solo founders and 
 
 **-Stripe Checkout Page**
 
-<img width="1358" height="911" alt="SS_StripeCheckout" src="https://github.com/user-attachments/assets/0617cf6e-69f8-4d5d-90f3-6680341bf05a" />
+<img width="1358" height="911" alt="SS_StripeCheckout" src="https://github.com/user-attachments/assets/fcd106d8-87b4-4708-b3b2-cc607bf8a60b" />
 
 ## Demo Credentials
 
