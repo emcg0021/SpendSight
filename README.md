@@ -87,6 +87,9 @@ Use the demo account to explore the app without signing up:
 - The app is fully deployed on Vercel with custom domain support.
 - If you're deploying it yourself, remember to add your environment variables under Project Settings → Environment Variables in Vercel.
 
+## Additional Documentation
+- [Stripe Setup Instructions](Stripe_Setup.md)
+
 ##  License
 
 - This project is licensed under the MIT License. Feel free to use and modify it as needed.
