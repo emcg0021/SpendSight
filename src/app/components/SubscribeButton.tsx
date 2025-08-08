@@ -15,7 +15,8 @@ export default function SubscribeButton({ user }: { user: User }) {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/create-checkout-session`, {
+      const res = await fetch('/api/create-checkout-session', {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
