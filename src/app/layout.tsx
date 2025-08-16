@@ -30,6 +30,19 @@ export default function RootLayout({
       >
         <Toaster position="top-right" />
         {children}
+
+         {/* SideProjectors “For Sale” badge */}
+        <a
+          href="https://www.sideprojectors.com/project/64381/spendsight"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://www.sideprojectors.com/img/badges/badge_2_red.png"
+            alt="SpendSight is for sale at @SideProjectors"
+            style={{ position: 'fixed', zIndex: 1000, top: '-5px', right: '20px', border: 0 }}
+          />
+        </a>
       </body>
     </html>
   );
